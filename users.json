@@ -1,0 +1,18 @@
+[
+    {
+        "id": "admin_main",
+        "username": "admin",
+        "password_hash": "scrypt:32768:8:1$2LViN2tSAF8BgyuR$8fd0de08dbf31e4fc8e7ddce1ced8421ef6215f2ce8ae291cea9122d7108e093c87939f0344c4197f172f5f1259bb3c3ff16e524ddaffbdb56e661ece898153c",
+        "name": "អ្នកគ្រប់គ្រង (Admin)",
+        "role": "admin",
+        "created_at": "2026-09-25 07:34:27"
+    },
+    {
+        "id": "user_staff_1",
+        "username": "user",
+        "password_hash": "scrypt:32768:8:1$tIHBSWvohskzowoy$5f0dc479cdf695c207c67086fac0e7b16d4fe2b6a39f36abbe07ccf4bf65275e1261dea1f2b1659d3136b54a084f15d5716e4f4d0b82abaf6bc834f992b3eadb",
+        "name": "បុគ្គលិក (Staff User)",
+        "role": "user",
+        "created_at": "2026-09-25 07:34:27"
+    }
+]

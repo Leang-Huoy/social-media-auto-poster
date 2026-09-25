@@ -1,0 +1,24 @@
+{
+  "name": "Social Media Auto Poster Pro",
+  "short_name": "AutoPoster",
+  "description": "ឧបករណ៍ Auto Post ពហុបណ្ដាញសង្គម Telegram, Facebook, YouTube, TikTok",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07090e",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

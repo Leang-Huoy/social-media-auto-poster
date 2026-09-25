@@ -1,0 +1,48 @@
+[
+    {
+        "id": "tg_channel_sum24",
+        "platform": "telegram",
+        "type": "channel",
+        "name": "Sum24 Channel",
+        "chat_id": "@your_channel_or_id",
+        "bot_token": "YOUR_BOT_TOKEN",
+        "enabled": true
+    },
+    {
+        "id": "tg_group_sum24",
+        "platform": "telegram",
+        "type": "group",
+        "name": "Telegram Discussion Group",
+        "chat_id": "-100xxxxxxxxx",
+        "bot_token": "YOUR_BOT_TOKEN",
+        "enabled": true
+    },
+    {
+        "id": "fb_page_main",
+        "platform": "facebook",
+        "type": "page",
+        "name": "Facebook Official Page",
+        "page_id": "",
+        "access_token": "",
+        "enabled": true
+    },
+    {
+        "id": "yt_channel_main",
+        "platform": "youtube",
+        "type": "channel",
+        "name": "YouTube Channel",
+        "client_id": "",
+        "client_secret": "",
+        "refresh_token": "",
+        "access_token": "",
+        "enabled": true
+    },
+    {
+        "id": "tiktok_main",
+        "platform": "tiktok",
+        "type": "account",
+        "name": "TikTok Official",
+        "access_token": "",
+        "enabled": true
+    }
+]

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Media Auto Poster Pro</title>
+  
+  <!-- PWA Manifest & App Icons -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#6366f1">
+  <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/static/icons/favicon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AutoPoster">
+
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- LOGIN & REGISTER SCREEN (Shown if not authenticated) -->
+  <div id="loginScreen" class="login-screen-overlay">
+    <div class="glass-panel login-card">
+      <div class="login-brand">
+        <div class="logo-icon" style="width: 56px; height: 56px; font-size: 28px; margin: 0 auto 12px;">🚀</div>
+        <h2 id="authCardTitle">ចូលប្រើប្រាស់ប្រព័ន្ធ</h2>
+        <p id="authCardSub">Social Poster Pro Management</p>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm" class="login-form">
+        <div class="form-field">
+          <label>ឈ្មោះគណនី (Username):</label>
+          <input type="text" id="loginUsername" placeholder="បញ្ចូល Username..." required autocomplete="username">
+        </div>
+        <div class="form-field">
+          <label>ពាក្យសម្ងាត់ (Password):</label>
+          <input type="password" id="loginPassword" placeholder="បញ្ចូល Password..." required autocomplete="current-password">
+        </div>
+
+        <!-- Show/Hide Password Checkbox -->
+        <div class="show-password-wrapper">
+          <label class="checkbox-label" for="chkShowLoginPassword">
+            <input type="checkbox" id="chkShowLoginPassword">
+            <span>បង្ហាញលេខសម្ងាត់</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-primary" id="btnLoginSubmit" style="width: 100%; margin-top: 6px;">
+          <span>🔐</span> ចូលប្រើប្រាស់ (Login)
+        </button>
+
+        <!-- Toggle to Register -->
+        <div class="auth-toggle-link">
+          <span>មិនទាន់មានគណនីមែនទេ?</span>
+          <button type="button" class="btn-link" id="btnSwitchToRegister">បង្កើតគណនីថ្មី (Register)</button>
+        </div>
+      </form>
+
+      <!-- REGISTER FORM (Hidden by default) -->
+      <form id="registerForm" class="login-form" style="display: none;">
+        <div class="form-field">
+          <label>ឈ្មោះគណនី (Username):</label>
+          <input type="text" id="regUsername" placeholder="ឧ. staff01 (យ៉ាងហោច ៣ តួ)" required autocomplete="username">
+        </div>
+        <div class="form-field">
+          <label>ឈ្មោះសម្គាល់ពេញលេញ (Full Name):</label>
+          <input type="text" id="regFullName" placeholder="ឧ. សុខា (Staff)">
+        </div>
+        <div class="form-field">
+          <label>ពាក្យសម្ងាត់ (Password):</label>
+          <input type="password" id="regPassword" placeholder="បញ្ចូលពាក្យសម្ងាត់ (យ៉ាងហោច ៤ តួ)..." required autocomplete="new-password">
+        </div>
+
+        <!-- Show/Hide Password Checkbox for Register -->
+        <div class="show-password-wrapper">
+          <label class="checkbox-label" for="chkShowRegPassword">
+            <input type="checkbox" id="chkShowRegPassword">
+            <span>បង្ហាញលេខសម្ងាត់</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-primary" id="btnRegisterSubmit" style="width: 100%; margin-top: 6px;">
+          <span>✨</span> បង្កើតគណនី (Create Account)
+        </button>
+
+        <!-- Toggle to Login -->
+        <div class="auth-toggle-link">
+          <span>មានគណនីរួចហើយ?</span>
+          <button type="button" class="btn-link" id="btnSwitchToLogin">ចូលប្រើប្រាស់ (Back to Login)</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- MAIN APP (Rendered after Login) -->
+  <div id="mainAppContent" style="display: none; flex-direction: column; min-height: 100vh;">
+    
+    <!-- Header -->
+    <header>
+      <div class="logo-area">
+        <div class="logo-icon">🚀</div>
+        <div class="logo-text">
+          <h1>Social Poster Pro</h1>
+          <p>ប្រព័ន្ធ Auto Post ពហុបណ្ដាញសង្គម</p>
+        </div>
+      </div>
+
+      <!-- Live Status & User Info -->
+      <div class="header-status">
+        <!-- PWA Install Button (Shown on installable browsers/phones) -->
+        <button type="button" class="btn-sm btn-install-app" id="btnInstallPwa" style="display: none;" title="ដំឡើងកម្មវិធីលើទូរស័ព្ទ ឬកុំព្យូទ័រ">
+          <span>📲</span> ដំឡើង App
+        </button>
+
+        <!-- Button to open Mobile QR Modal -->
+        <button type="button" class="btn-sm btn-mobile-access" id="btnOpenMobileModal" title="តំណភ្ជាប់ និង QR Code សម្រាប់ប្រើលើទូរស័ព្ទ">
+          <span>📱</span> ប្រើលើទូរស័ព្ទ
+        </button>
+
+        <div id="statusSummary" class="status-badge online">
+          <span class="dot"></span> <span id="activeAccountsCount">កំពុងរាប់គណនី...</span>
+        </div>
+
+        <!-- Logged-in User Profile Badge -->
+        <div class="user-profile-badge">
+          <span id="userRoleBadge" class="role-pill admin">👑 Admin</span>
+          <span id="userNameDisplay" class="user-name-text">Admin</span>
+          <button class="btn-logout" id="btnLogout" title="ចាកចេញពីគណនី">🚪 ចាកចេញ</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="app-container">
+      
+      <!-- Navigation Tabs -->
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="createPostTab">
+          <span>✍️</span> បង្កើត Post (All Formats)
+        </button>
+        
+        <!-- Manage Accounts Tab (Admin full / User view-only) -->
+        <button class="nav-tab" data-tab="accountsTab" id="tabNavAccounts">
+          <span>👥</span> គ្រប់គ្រងគណនី (<span id="tabAccCount">0</span>)
+        </button>
+        
+        <button class="nav-tab" data-tab="queueTab">
+          <span>⏰</span> តារាងរង់ចាំ (Queue)
+        </button>
+        <button class="nav-tab" data-tab="logsTab">
+          <span>📜</span> ប្រវត្តិ Post (Logs)
+        </button>
+
+        <!-- Admin Only Tab: User Management -->
+        <button class="nav-tab admin-only-feature" data-tab="userManagementTab" id="tabNavUsers" style="display: none;">
+          <span>🛡️</span> គ្រប់គ្រងអ្នកប្រើប្រាស់ (Users)
+        </button>
+      </nav>
+
+      <!-- TAB 1: Create Post (Supports Text + Photo + Video Combined) -->
+      <section id="createPostTab" class="tab-pane active">
+        <div class="post-grid">
+          
+          <!-- Left: Composer Card -->
+          <div class="glass-panel composer-card">
+            
+            <div class="card-title" style="justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span>📝</span> រៀបចំមាតិកា (អត្ថបទ + រូបភាព + វីដេអូ)
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn-sm" id="btnSelectAll" title="ជ្រើសរើសទាំងអស់">✅ ជ្រើសរើសទាំងអស់</button>
+                <button type="button" class="btn-sm" id="btnDeselectAll" title="ដោះទាំងអស់">❌ ដោះទាំងអស់</button>
+              </div>
+            </div>
+
+            <!-- Target Accounts Selector -->
+            <div>
+              <div class="section-subtitle">ជ្រើសរើសបណ្ដាញសង្គម / គណនីដែលត្រូវ Post ទៅកាន់</div>
+              <div id="accountsCheckboxList" class="accounts-grid-selection">
+                <p style="color: var(--text-dim); font-size: 0.85rem;">កំពុងផ្ទុកបញ្ជីគណនី...</p>
+              </div>
+            </div>
+
+            <!-- Textarea Editor -->
+            <div>
+              <div class="section-subtitle">១. ខ្លឹមសារសារ (Message / Caption)</div>
+              <div class="editor-wrapper">
+                <div class="editor-toolbar">
+                  <div class="toolbar-emojis">
+                    <button class="btn-emoji" type="button">🚀</button>
+                    <button class="btn-emoji" type="button">🔥</button>
+                    <button class="btn-emoji" type="button">📢</button>
+                    <button class="btn-emoji" type="button">✨</button>
+                    <button class="btn-emoji" type="button">💡</button>
+                    <button class="btn-emoji" type="button">❤️</button>
+                    <button class="btn-emoji" type="button">📌</button>
+                  </div>
+                  <div class="char-counter" id="charCount">0 តួអក្សរ</div>
+                </div>
+                <textarea id="postMessage" placeholder="សរសេរសារ ឬចំណងជើងនៅទីនេះ... គាំទ្រទាំង HTML ដូចជា <b>អក្សរដិត</b> ឬ <i>អក្សរទ្រេត</i>"></textarea>
+              </div>
+            </div>
+
+            <!-- Multi-Media Attachment Zone -->
+            <div>
+              <div class="section-subtitle">២. ឯកសារ Media (អាចភ្ជាប់ទាំង រូបភាព និង វីដេអូ ព្រមគ្នា)</div>
+              
+              <div class="media-dual-grid">
+                
+                <!-- PHOTO ATTACHMENT BOX -->
+                <div class="media-box">
+                  <div class="media-box-header">
+                    <span>🖼️ រូបភាព (Photo)</span>
+                    <span id="photoBadge" class="badge-optional">ស្រេចចិត្ត</span>
+                  </div>
+                  <input type="file" id="photoFileInput" style="display: none;" accept="image/*">
+                  <div id="photoDropzone" class="dropzone-mini">
+                    <span style="font-size: 1.5rem;">📷</span>
+                    <p>ចុច ឬទម្លាក់ រូបភាព (JPG, PNG, WEBP)</p>
+                  </div>
+                  <div id="photoPreviewContainer" class="media-preview-container-mini" style="display: none;">
+                    <img id="photoPreviewImg" src="" alt="Photo Preview">
+                    <button type="button" class="btn-remove-media-sm" id="btnRemovePhoto">✕</button>
+                  </div>
+                </div>
+
+                <!-- VIDEO ATTACHMENT BOX -->
+                <div class="media-box">
+                  <div class="media-box-header">
+                    <span>🎬 វីដេអូ (Video / YouTube / TikTok)</span>
+                    <span id="videoBadge" class="badge-optional">ស្រេចចិត្ត</span>
+                  </div>
+                  <input type="file" id="videoFileInput" style="display: none;" accept="video/*">
+                  <div id="videoDropzone" class="dropzone-mini">
+                    <span style="font-size: 1.5rem;">🎥</span>
+                    <p>ចុច ឬទម្លាក់ វីដេអូ (MP4, MOV, MKV)</p>
+                  </div>
+                  <div id="videoPreviewContainer" class="media-preview-container-mini" style="display: none;">
+                    <video id="videoPreviewVid" src="" controls muted></video>
+                    <button type="button" class="btn-remove-media-sm" id="btnRemoveVideo">✕</button>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- TikTok Public URL Optional input -->
+              <div id="tiktokUrlContainer" style="margin-top: 10px;">
+                <input type="url" id="tiktokPublicUrl" class="input-media-url" placeholder="🌐 (សម្រាប់ TikTok) បញ្ចូល Public Video URL: https://example.com/video.mp4">
+              </div>
+
+            </div>
+
+            <!-- Actions -->
+            <div class="composer-actions">
+              <button id="btnPublishNow" class="btn-primary">
+                <span>🚀</span> Publish ទៅគ្រប់គណនីដែលបានជ្រើសរើស
+              </button>
+              <button id="btnAddToQueue" class="btn-secondary">
+                <span>⏰</span> ដាក់ចូល Queue
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Right: Live Mockup Preview -->
+          <div class="glass-panel preview-card">
+            <div class="card-title">
+              <span>📱</span> Live Preview (ទិដ្ឋភាពជាក់ស្ដែង)
+            </div>
+
+            <div class="mobile-mockup">
+              <div class="mockup-header">
+                <div class="mockup-avatar">🚀</div>
+                <div class="mockup-user">
+                  <h4 id="mockupChannelName">Social Media Broadcast</h4>
+                  <span>ទើបតែមុននេះបន្តិច • 🌐 ជាសាធារណៈ</span>
+                </div>
+              </div>
+
+              <div class="mockup-body">
+                <div id="previewText" class="mockup-text">សាររបស់អ្នកនឹងបង្ហាញនៅទីនេះពេលអ្នកវាយបញ្ចូល...</div>
+                
+                <div id="mockupPhoto" class="mockup-media" style="display: none;">
+                  <img id="mockupPhotoImg" src="" alt="Photo">
+                </div>
+
+                <div id="mockupVideo" class="mockup-media" style="display: none;">
+                  <video id="mockupVideoVid" src="" controls muted loop></video>
+                </div>
+              </div>
+
+              <div class="mockup-footer">
+                <span>👁️ 2.4K views</span>
+                <span>❤️ 512 Likes</span>
+                <span>💬 84 Comments</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TAB 2: Accounts Management (Admin full / User view-only) -->
+      <section id="accountsTab" class="tab-pane">
+        <div class="glass-panel" style="padding: 1.75rem;">
+          
+          <div class="queue-header">
+            <div class="card-title">
+              <span>👥</span> បញ្ជីគណនីបណ្ដាញសង្គម (Social Accounts)
+            </div>
+            <!-- Add Account Button: Only for Admin -->
+            <button class="btn-primary admin-only-feature" id="btnOpenAddAccountModal" style="flex: initial; padding: 10px 18px; display: none;">
+              <span>➕</span> បន្ថែមគណនីថ្មី (Admin Only)
+            </button>
+          </div>
+
+          <p id="accountPermissionNotice" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+            <!-- Populated dynamically based on user role -->
+          </p>
+
+          <!-- Accounts Grid -->
+          <div id="accountsCardsGrid" class="accounts-cards-grid">
+            <!-- Populated dynamically -->
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TAB 3: Queue & Scheduler -->
+      <section id="queueTab" class="tab-pane">
+        <div class="glass-panel" style="padding: 1.75rem;">
+          <div class="queue-header">
+            <div class="card-title">
+              <span>⏰</span> បញ្ជី Post រង់ចាំក្នុង Queue
+            </div>
+            <button class="btn-secondary" onclick="loadQueue()">🔄 Refresh បញ្ជី</button>
+          </div>
+
+          <table class="queue-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>ខ្លឹមសារសារ</th>
+                <th>Media</th>
+                <th>ស្ថានភាព</th>
+                <th>សកម្មភាព</th>
+              </tr>
+            </thead>
+            <tbody id="queueTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 4: Activity Logs -->
+      <section id="logsTab" class="tab-pane">
+        <div class="glass-panel" style="padding: 1.75rem;">
+          <div class="queue-header">
+            <div class="card-title">
+              <span>📜</span> ប្រវត្តិការ Post ថ្មីៗ (Activity Logs)
+            </div>
+            <button class="btn-secondary" onclick="loadLogs()">🔄 Refresh Logs</button>
+          </div>
+          <div id="logsContainer">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: User Management (Admin Only) -->
+      <section id="userManagementTab" class="tab-pane">
+        <div class="glass-panel" style="padding: 1.75rem;">
+          <div class="queue-header">
+            <div class="card-title">
+              <span>🛡️</span> គ្រប់គ្រងគណនីអ្នកប្រើប្រាស់ (User Accounts Management)
+            </div>
+            <button class="btn-primary" id="btnOpenAddUserModal" style="flex: initial; padding: 10px 18px;">
+              <span>➕</span> បង្កើតគណនីបុគ្គលិកថ្មី
+            </button>
+          </div>
+
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+            Admin អាចបង្កើតគណនីបុគ្គលិក (Staff Users) ដើម្បីឱ្យពួកគាត់អាចចូលប្រើប្រាស់ Post តាមបណ្ដាញសង្គមដែលបានកំណត់។
+          </p>
+
+          <table class="queue-table">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>ឈ្មោះសម្គាល់</th>
+                <th>កម្រិតសិទ្ធិ (Role)</th>
+                <th>កាលបរិច្ឆេទបង្កើត</th>
+                <th>សកម្មភាព</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ADD / EDIT SOCIAL ACCOUNT MODAL (Admin Only) -->
+  <div id="accountModal" class="modal-overlay" style="display: none;">
+    <div class="glass-panel modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">➕ បន្ថែមគណនីបណ្ដាញសង្គមថ្មី (Admin)</h3>
+        <button class="btn-close-modal" id="btnCloseModal">✕</button>
+      </div>
+
+      <form id="accountForm">
+        <input type="hidden" id="acc_id">
+
+        <div class="form-field">
+          <label>ប្រភេទបណ្ដាញសង្គម (Platform):</label>
+          <select id="acc_platform" class="input-select">
+            <option value="telegram">✈️ Telegram (Channel / Group)</option>
+            <option value="facebook">🌐 Facebook Page</option>
+            <option value="youtube">▶️ YouTube Channel</option>
+            <option value="tiktok">🎵 TikTok Account</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label>ឈ្មោះគណនី / សម្គាល់ (Label Name):</label>
+          <input type="text" id="acc_name" placeholder="ឧ. Sum24 Channel, Official Page..." required>
+        </div>
+
+        <!-- Telegram Fields -->
+        <div id="fields_telegram" class="platform-specific-fields">
+          <div class="form-field">
+            <label>Telegram Bot Token:</label>
+            <input type="text" id="acc_tg_token" placeholder="8957791647:AAHE6P5dOmlZy7lkrZOwW6glxvFNA5zoJ7o">
+          </div>
+          <div class="form-field">
+            <label>Chat ID (Channel ឬ Group ID):</label>
+            <input type="text" id="acc_tg_chat_id" placeholder="-1001775565917">
+          </div>
+        </div>
+
+        <!-- Facebook Fields -->
+        <div id="fields_facebook" class="platform-specific-fields" style="display: none;">
+          <div class="form-field">
+            <label>Facebook Page ID:</label>
+            <input type="text" id="acc_fb_page_id" placeholder="123456789012345">
+          </div>
+          <div class="form-field">
+            <label>Page Access Token:</label>
+            <input type="password" id="acc_fb_token" placeholder="EAAB...">
+          </div>
+        </div>
+
+        <!-- YouTube Fields -->
+        <div id="fields_youtube" class="platform-specific-fields" style="display: none;">
+          <div class="form-field">
+            <label>Google OAuth2 Client ID:</label>
+            <input type="text" id="acc_yt_client_id" placeholder="xxxx.apps.googleusercontent.com">
+          </div>
+          <div class="form-field">
+            <label>Google OAuth2 Client Secret:</label>
+            <input type="password" id="acc_yt_client_secret" placeholder="GOCSPX-xxxx">
+          </div>
+          <div class="form-field">
+            <label>Google OAuth2 Refresh Token:</label>
+            <input type="password" id="acc_yt_refresh_token" placeholder="1//04xxxx">
+          </div>
+        </div>
+
+        <!-- TikTok Fields -->
+        <div id="fields_tiktok" class="platform-specific-fields" style="display: none;">
+          <div class="form-field">
+            <label>TikTok Developer Access Token:</label>
+            <input type="password" id="acc_tt_token" placeholder="act.example...">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="btnCancelModal">បោះបង់</button>
+          <button type="submit" class="btn-primary" style="flex: initial; min-width: 140px;">រក្សាទុកគណនី</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD NEW USER MODAL (Admin Only) -->
+  <div id="userModal" class="modal-overlay" style="display: none;">
+    <div class="glass-panel modal-card">
+      <div class="modal-header">
+        <h3>➕ បង្កើតគណនីអ្នកប្រើប្រាស់ថ្មី</h3>
+        <button class="btn-close-modal" id="btnCloseUserModal">✕</button>
+      </div>
+
+      <form id="userForm">
+        <div class="form-field">
+          <label>ឈ្មោះ Username (សម្រាប់ Login):</label>
+          <input type="text" id="newUserUsername" placeholder="ឧ. staff01" required autocomplete="off">
+        </div>
+        <div class="form-field">
+          <label>ពាក្យសម្ងាត់ (Password):</label>
+          <input type="password" id="newUserPassword" placeholder="បញ្ចូលពាក្យសម្ងាត់..." required autocomplete="new-password">
+        </div>
+        <div class="form-field">
+          <label>ឈ្មោះសម្គាល់ពេញលេញ (Full Name):</label>
+          <input type="text" id="newUserName" placeholder="ឧ. សុខា - បុគ្គលិក Post">
+        </div>
+        <div class="form-field">
+          <label>កម្រិតសិទ្ធិ (Role):</label>
+          <select id="newUserRole" class="input-select">
+            <option value="user">👤 User (ប្រើប្រាស់តែបណ្ដាញដែល Admin កំណត់)</option>
+            <option value="admin">👑 Admin (សិទ្ធិពេញលេញលើប្រព័ន្ធ)</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="btnCancelUserModal">បោះបង់</button>
+          <button type="submit" class="btn-primary" style="flex: initial; min-width: 140px;">បង្កើតគណនី</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MOBILE PHONE ACCESS MODAL -->
+  <div id="mobileAccessModal" class="modal-overlay" style="display: none;">
+    <div class="glass-panel modal-card" style="max-width: 520px; text-align: center;">
+      <div class="modal-header">
+        <h3>📱 ប្រើប្រាស់លើទូរស័ព្ទដៃ (Mobile Phone & Hosting)</h3>
+        <button class="btn-close-modal" id="btnCloseMobileModal">✕</button>
+      </div>
+
+      <div style="padding: 1rem 0; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+        
+        <!-- Toggle Tabs: Public Cloud Link vs Local Wi-Fi Link -->
+        <div class="segmented-control" style="width: 100%;">
+          <button type="button" class="segment-btn active" id="tabModePublic">
+            <span>🌐</span> អនឡាញ (Online 4G/5G)
+          </button>
+          <button type="button" class="segment-btn" id="tabModeLocal">
+            <span>🏠</span> ក្នុង Wi-Fi ផ្ទះ
+          </button>
+        </div>
+
+        <p id="mobileModalNotice" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+          ប្រើបានពីគ្រប់ទីកន្លែងលើពិភពលោក (មិនចាំបាច់នៅក្បែរ Wi-Fi ក៏ប្រើបានតាម 4G/5G)
+        </p>
+
+        <!-- QR Code Image -->
+        <div style="background: #fff; padding: 12px; border-radius: 16px; display: inline-block; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+          <img id="mobileQrCodeImg" src="" alt="Mobile QR Code" style="width: 180px; height: 180px; display: block;">
+        </div>
+
+        <!-- Link with Copy Button -->
+        <div style="display: flex; width: 100%; gap: 8px;">
+          <input type="text" id="mobileUrlInput" readonly class="input-media-url" style="text-align: center; font-weight: 700; color: var(--accent-cyan); font-size: 0.95rem;">
+          <button type="button" class="btn-primary" id="btnCopyMobileUrl" style="flex: initial; padding: 10px 16px;">📋 Copy</button>
+        </div>
+
+        <div style="display: flex; gap: 8px; width: 100%; justify-content: center;">
+          <button type="button" class="btn-secondary" id="btnLaunchPublicTunnel" style="font-size: 0.82rem; padding: 8px 14px;">
+            <span>⚡</span> បង្កើត Public HTTPS Link ថ្មី
+          </button>
+        </div>
+
+        <div style="font-size: 0.78rem; color: var(--text-dim); text-align: left; background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); width: 100%;">
+          💡 <b>របៀបដំឡើងជា App លើទូរស័ព្ទ៖</b><br>
+          • លើ iPhone: បើក Safari ➡️ ចុច Share ➡️ ចុច <b>"Add to Home Screen"</b><br>
+          • លើ Android: បើក Chrome ➡️ ចុច <b>"Install App"</b> ឬ <b>"Add to Home screen"</b>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer"></div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
